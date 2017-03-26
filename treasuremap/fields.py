@@ -59,6 +59,7 @@ class LatLongField(DjangoModelFieldBase):
     default_error_messages = {
         'invalid': _("'%(value)s' both values must be a decimal number or integer."),
         'invalid_separator': _("As the separator value '%(value)s' must be ';'"),
+        'invalid_type': _("Something went wrong with '%(value)s'"),
     }
 
     def __init__(self, *args, **kwargs):
@@ -75,7 +76,7 @@ class LatLongField(DjangoModelFieldBase):
             return LatLong()
         elif isinstance(value, LatLong):
             return value
-        else:
+        elif isinstance(value, str):
             args = value.split(';')
 
             if len(args) != 2:
@@ -84,6 +85,12 @@ class LatLongField(DjangoModelFieldBase):
                 )
 
             return LatLong(*args)
+        elif isinstance(value, list):
+            return LatLong(*value)
+        else:
+            raise ValidationError(
+                self.error_messages['invalid_type'], code='invalid', params={'value': value},
+            )
 
     def get_db_prep_value(self, value, connection, prepared=False):
         value = super(LatLongField, self).get_prep_value(value)
