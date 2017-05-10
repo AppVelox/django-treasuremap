@@ -1,10 +1,14 @@
 (function($) {
-    function addMarker(position, map, latinput, lnginput, markers) {
+    function addMarker(position, map, latinput, lnginput, markers, markerIconOptions) {
         // del markers
         deleteMarkers(map, markers);
 
         // create new placemark
-        var placemark = new ymaps.Placemark(position, {});
+        var markerParams = {};
+        if (markerIconOptions) {
+            markerParams = markerIconOptions;
+        }
+        var placemark = new ymaps.Placemark(position, {}, markerParams);
 
         // add placemark to map
         map.geoObjects.add(placemark);
@@ -51,15 +55,21 @@
                 // create map
                 var map = new ymaps.Map(map_element, mapOptions);
 
+                var markerIconOptions = undefined;
+
+                if (mapOptions.icon_options) {
+                    markerIconOptions = mapOptions.icon_options;
+                }
+
                 // add default marker
                 if (latitude_input.val() && longitude_input.val()) {
-                    addMarker(defaultMapOptions.center, map, latitude_input, longitude_input, markers);
+                    addMarker(defaultMapOptions.center, map, latitude_input, longitude_input, markers, markerIconOptions);
                 }
 
                 // init listener
                 return map.events.add("click",
                     function(e) {
-                        addMarker(e.get('coords'), map, latitude_input, longitude_input, markers);
+                        addMarker(e.get('coords'), map, latitude_input, longitude_input, markers, markerIconOptions);
                     }
                 );
             });
