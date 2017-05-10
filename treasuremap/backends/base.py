@@ -54,9 +54,6 @@ class BaseMapBackend(object):
 
     def get_map_options(self):
         map_options = self.options.get('MAP_OPTIONS', {})
-        map_options = OrderedDict(
-            sorted(map_options.items(), key=lambda x: x[1], reverse=True)
-        )
 
         if not map_options.get('latitude'):
             map_options['latitude'] = 51.562519
