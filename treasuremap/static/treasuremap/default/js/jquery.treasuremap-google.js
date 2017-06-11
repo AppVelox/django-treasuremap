@@ -28,6 +28,7 @@
     }
 
     $(document).ready(function() {
+        jQuery('ymaps[class*=-searchbox-input__icon]').hide();
         $('.treasure-map').each(function (index, element) {
             var map_element = $(element).children('.map').get(0);
             var latitude_input = $(element).children('input:eq(0)');
